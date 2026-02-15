@@ -21,7 +21,7 @@ export default function Dashboard() {
           <h3>Subscription</h3>
           <p className={styles.status}>
             {user?.subscription?.status === 'active'
-              ? `Active — ${user.subscription.plan}`
+              ? `Active — ${user.subscription.plan || 'Subscribed'}`
               : 'No active plan'}
           </p>
         </Card>

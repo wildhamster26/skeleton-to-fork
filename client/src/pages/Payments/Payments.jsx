@@ -106,7 +106,7 @@ export default function Payments() {
       {activePlan && (
         <div className={styles.manage}>
           <p>
-            Current plan: <strong>{user.subscription.plan}</strong>
+            Current plan: <strong>{user.subscription.plan || 'Active'}</strong>
           </p>
           <Button variant="danger" size="sm" onClick={() => cancel()} disabled={cancelLoading}>
             Cancel Subscription
