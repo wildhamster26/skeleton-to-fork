@@ -1,0 +1,94 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  @include container;
+  padding-top: $spacing-8;
+  padding-bottom: $spacing-16;
+  text-align: center;
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+  }
+}
+
+.subtitle {
+  color: $color-text-light;
+  margin-bottom: $spacing-12;
+}
+
+.grid {
+  display: grid;
+  gap: $spacing-6;
+  text-align: left;
+
+  @include bp($bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  h3 {
+    font-size: $font-size-xl;
+    font-weight: 600;
+    margin-bottom: $spacing-1;
+  }
+
+  button {
+    margin-top: auto;
+    width: 100%;
+  }
+}
+
+.popular {
+  border-color: $color-primary;
+  box-shadow: $shadow-md;
+}
+
+.badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $color-primary;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  padding: $spacing-1 $spacing-3;
+  border-radius: 999px;
+}
+
+.price {
+  font-size: $font-size-4xl;
+  font-weight: 800;
+  color: $color-primary;
+  margin-bottom: $spacing-4;
+}
+
+.features {
+  margin-bottom: $spacing-6;
+
+  li {
+    padding: $spacing-2 0;
+    border-bottom: 1px solid $color-border;
+    font-size: $font-size-sm;
+    color: $color-text-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.manage {
+  margin-top: $spacing-8;
+
+  p {
+    margin-bottom: $spacing-4;
+  }
+}

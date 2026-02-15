@@ -1,0 +1,76 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.landing {
+  @include container;
+}
+
+.hero {
+  text-align: center;
+  padding: $spacing-16 0;
+}
+
+.title {
+  font-size: $font-size-4xl;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: $spacing-4;
+
+  span {
+    color: $color-primary;
+  }
+
+  @include bp($bp-md) {
+    font-size: 3.5rem;
+  }
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $color-text-light;
+  max-width: 600px;
+  margin: 0 auto $spacing-8;
+}
+
+.cta {
+  display: flex;
+  gap: $spacing-4;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.features {
+  padding: $spacing-16 0;
+
+  h2 {
+    text-align: center;
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    margin-bottom: $spacing-12;
+  }
+}
+
+.grid {
+  display: grid;
+  gap: $spacing-6;
+  grid-template-columns: 1fr;
+
+  @include bp($bp-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.feature {
+  @include card;
+  padding: $spacing-6;
+
+  h3 {
+    font-size: $font-size-xl;
+    font-weight: 600;
+    margin-bottom: $spacing-2;
+  }
+
+  p {
+    color: $color-text-light;
+  }
+}

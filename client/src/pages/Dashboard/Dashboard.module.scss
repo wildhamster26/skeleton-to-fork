@@ -1,0 +1,45 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  @include container;
+  padding-top: $spacing-8;
+  padding-bottom: $spacing-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    margin-bottom: $spacing-1;
+  }
+}
+
+.greeting {
+  color: $color-text-light;
+  margin-bottom: $spacing-8;
+}
+
+.grid {
+  display: grid;
+  gap: $spacing-6;
+
+  @include bp($bp-md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    margin-bottom: $spacing-2;
+  }
+}
+
+.status {
+  font-weight: 500;
+  color: $color-primary;
+}
+
+.meta {
+  color: $color-text-light;
+  font-size: $font-size-sm;
+  margin-top: $spacing-2;
+}

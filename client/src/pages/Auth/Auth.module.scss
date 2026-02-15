@@ -1,0 +1,76 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  @include flex-center;
+  padding: $spacing-16 $spacing-4;
+}
+
+.form {
+  @include card;
+  width: 100%;
+  max-width: 420px;
+  padding: $spacing-8;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    margin-bottom: $spacing-6;
+    text-align: center;
+  }
+}
+
+.field {
+  margin-bottom: $spacing-4;
+
+  label {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    margin-bottom: $spacing-1;
+    color: $color-text;
+  }
+
+  input {
+    width: 100%;
+    padding: $spacing-2 $spacing-3;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-base;
+    transition: border-color 0.15s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+  }
+}
+
+.submit {
+  width: 100%;
+  margin-top: $spacing-4;
+}
+
+.error {
+  color: $color-danger;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-4;
+  text-align: center;
+}
+
+.link {
+  text-align: center;
+  margin-top: $spacing-4;
+  font-size: $font-size-sm;
+  color: $color-text-light;
+
+  a {
+    color: $color-primary;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

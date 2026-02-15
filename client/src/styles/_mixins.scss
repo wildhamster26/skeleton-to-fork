@@ -1,0 +1,43 @@
+@use 'variables' as *;
+
+@mixin container {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $spacing-4;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card {
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+}
+
+@mixin bp($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

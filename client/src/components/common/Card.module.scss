@@ -1,0 +1,9 @@
+@use '../../styles/variables' as *;
+
+.card {
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  padding: $spacing-6;
+}

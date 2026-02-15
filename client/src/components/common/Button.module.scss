@@ -1,0 +1,62 @@
+@use 'sass:color';
+@use '../../styles/variables' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, box-shadow 0.15s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.primary {
+  background: $color-primary;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-dark;
+  }
+}
+
+.secondary {
+  background: transparent;
+  color: $color-primary;
+  border: 1px solid $color-border;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-alt;
+  }
+}
+
+.danger {
+  background: $color-danger;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: color.adjust($color-danger, $lightness: -8%);
+  }
+}
+
+.sm {
+  padding: $spacing-1 $spacing-3;
+  font-size: $font-size-sm;
+}
+
+.md {
+  padding: $spacing-2 $spacing-4;
+  font-size: $font-size-base;
+}
+
+.lg {
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-lg;
+}

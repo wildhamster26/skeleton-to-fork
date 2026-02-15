@@ -1,0 +1,15 @@
+@use 'reset';
+@use 'variables' as *;
+
+body {
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  color: $color-text;
+  background: $color-bg;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
