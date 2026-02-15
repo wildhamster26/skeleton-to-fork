@@ -10,7 +10,17 @@ import typeDefs from './graphql/typeDefs.js';
 import resolvers from './graphql/resolvers.js';
 import webhookRouter from './routes/webhooks.js';
 
+// Validate required environment variables at startup
+const REQUIRED_ENV = ['MONGODB_URI', 'JWT_SECRET', 'LEMONSQUEEZY_API_KEY', 'LEMONSQUEEZY_WEBHOOK_SECRET'];
+for (const key of REQUIRED_ENV) {
+  if (!process.env[key]) {
+    console.error(`Missing required environment variable: ${key}`);
+    process.exit(1);
+  }
+}
+
 const PORT = process.env.PORT || 4000;
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 
 async function start() {
   await connectDB();
@@ -20,9 +30,9 @@ async function start() {
   // Webhook routes need raw body — mount BEFORE json parser
   app.use('/webhooks', webhookRouter);
 
-  app.use(cors());
+  app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
   app.use(helmet({ contentSecurityPolicy: false }));
-  app.use(express.json());
+  app.use(express.json({ limit: '16kb' }));
 
   const apollo = new ApolloServer({ typeDefs, resolvers });
   await apollo.start();
@@ -45,4 +55,12 @@ async function start() {
   });
 }
 
-start();
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled rejection:', err);
+  process.exit(1);
+});
+
+start().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});

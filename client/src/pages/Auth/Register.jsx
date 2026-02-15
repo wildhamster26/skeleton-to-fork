@@ -1,27 +1,11 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
 import { REGISTER } from '../../graphql/mutations';
-import { useAuth } from '../../context/AuthContext';
+import { useAuthForm } from './useAuthForm';
 import Button from '../../components/common/Button';
 import styles from './Auth.module.scss';
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const [registerMutation, { loading, error }] = useMutation(REGISTER, {
-    onCompleted({ register: data }) {
-      login(data.token);
-      navigate('/dashboard');
-    },
-  });
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    registerMutation({ variables: form });
-  }
+  const { form, setField, handleSubmit, loading, error } = useAuthForm(REGISTER, 'register');
 
   return (
     <div className={styles.page}>
@@ -36,7 +20,7 @@ export default function Register() {
             type="text"
             required
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={(e) => setField('name', e.target.value)}
           />
         </div>
 
@@ -47,7 +31,7 @@ export default function Register() {
             type="email"
             required
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onChange={(e) => setField('email', e.target.value)}
           />
         </div>
 
@@ -59,7 +43,7 @@ export default function Register() {
             required
             minLength={8}
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={(e) => setField('password', e.target.value)}
           />
         </div>
 

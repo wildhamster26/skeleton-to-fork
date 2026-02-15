@@ -1,9 +1,22 @@
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { signToken, requireAuth, requireAdmin } from '../middleware/auth.js';
 import {
   createCheckout,
   cancelSubscription as lsCancelSub,
 } from '../services/lemonSqueezy.js';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_USERS_LIMIT = 100;
+
+// Dummy hash for constant-time login rejection when user doesn't exist
+const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', 12);
+
+function validateRegisterInput({ email, password, name }) {
+  if (!EMAIL_RE.test(email)) throw new Error('Invalid email format');
+  if (password.length < 8) throw new Error('Password must be at least 8 characters');
+  if (name.length < 1 || name.length > 100) throw new Error('Name must be 1-100 characters');
+}
 
 export default {
   Query: {
@@ -26,23 +39,40 @@ export default {
 
     async users(_parent, { limit = 20, offset = 0 }, { user }) {
       requireAdmin(user);
-      return User.find().sort({ createdAt: -1 }).skip(offset).limit(limit).lean();
+      const safeLimit = Math.min(Math.max(1, limit), MAX_USERS_LIMIT);
+      const safeOffset = Math.max(0, offset);
+      return User.find().sort({ createdAt: -1 }).skip(safeOffset).limit(safeLimit).lean();
     },
   },
 
   Mutation: {
-    async register(_parent, { email, password, name }) {
-      const exists = await User.findOne({ email });
-      if (exists) throw new Error('Email already in use');
+    async register(_parent, args) {
+      validateRegisterInput(args);
 
-      const user = await User.create({ email, password, name });
-      const token = signToken(user._id);
-      return { token, user };
+      try {
+        const user = await User.create({
+          email: args.email,
+          password: args.password,
+          name: args.name,
+        });
+        const token = signToken(user._id);
+        return { token, user };
+      } catch (err) {
+        // Handle duplicate key error from unique index
+        if (err.code === 11000) throw new Error('Email already in use');
+        throw err;
+      }
     },
 
     async login(_parent, { email, password }) {
       const user = await User.findOne({ email }).select('+password');
-      if (!user || !(await user.comparePassword(password))) {
+
+      // Always run bcrypt to prevent timing-based user enumeration
+      const isValid = user
+        ? await user.comparePassword(password)
+        : await bcrypt.compare(password, DUMMY_HASH);
+
+      if (!user || !isValid) {
         throw new Error('Invalid email or password');
       }
 

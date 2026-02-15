@@ -9,16 +9,19 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email format'],
     },
     password: {
       type: String,
       required: true,
       minlength: 8,
+      select: false,
     },
     name: {
       type: String,
       required: true,
       trim: true,
+      maxlength: 100,
     },
     role: {
       type: String,
@@ -41,8 +44,12 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
+  try {
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 userSchema.methods.comparePassword = function (candidate) {

@@ -6,14 +6,20 @@ import { client } from '../apollo/client';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
-
-  const { data, loading } = useQuery(ME, {
-    skip: !token,
-    fetchPolicy: 'network-only',
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('token');
+    } catch {
+      return null;
+    }
   });
 
-  const user = data?.me ?? null;
+  const { data, loading, error } = useQuery(ME, {
+    skip: !token,
+  });
+
+  // If ME query fails (expired/invalid token), clear it
+  const user = error ? null : (data?.me ?? null);
 
   const login = useCallback((newToken) => {
     localStorage.setItem('token', newToken);
@@ -23,12 +29,12 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     setToken(null);
-    client.resetStore();
+    client.resetStore().catch(() => {});
   }, []);
 
   const value = useMemo(
-    () => ({ user, token, loading, login, logout, isAuthenticated: !!token }),
-    [user, token, loading, login, logout]
+    () => ({ user, token, loading, login, logout, isAuthenticated: !!token && !error }),
+    [user, token, loading, login, logout, error]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

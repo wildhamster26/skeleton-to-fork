@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useAuth } from '../../context/AuthContext';
 import { CREATE_CHECKOUT_URL, CANCEL_SUBSCRIPTION } from '../../graphql/mutations';
@@ -28,22 +30,44 @@ const PLANS = [
   },
 ];
 
+const TRUSTED_CHECKOUT_HOST = 'lemonsqueezy.com';
+
 export default function Payments() {
   const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const [checkout, { loading: checkoutLoading }] = useMutation(CREATE_CHECKOUT_URL, {
     onCompleted({ createCheckoutUrl }) {
-      window.location.href = createCheckoutUrl;
+      try {
+        const url = new URL(createCheckoutUrl);
+        if (url.hostname.endsWith(TRUSTED_CHECKOUT_HOST)) {
+          window.location.href = createCheckoutUrl;
+        } else {
+          setErrorMsg('Invalid checkout URL received');
+        }
+      } catch {
+        setErrorMsg('Invalid checkout URL received');
+      }
+    },
+    onError(err) {
+      setErrorMsg(err.message);
     },
   });
 
-  const [cancel, { loading: cancelLoading }] = useMutation(CANCEL_SUBSCRIPTION);
+  const [cancel, { loading: cancelLoading }] = useMutation(CANCEL_SUBSCRIPTION, {
+    onError(err) {
+      setErrorMsg(err.message);
+    },
+    refetchQueries: ['Me'],
+  });
 
   const activePlan = user?.subscription?.status === 'active';
 
   function handleCheckout(variantId) {
+    setErrorMsg(null);
     if (!isAuthenticated) {
-      window.location.href = '/register';
+      navigate('/register');
       return;
     }
     checkout({ variables: { variantId } });
@@ -53,6 +77,8 @@ export default function Payments() {
     <div className={styles.page}>
       <h1>Pricing</h1>
       <p className={styles.subtitle}>Choose the plan that works for you.</p>
+
+      {errorMsg && <p className={styles.error}>{errorMsg}</p>}
 
       <div className={styles.grid}>
         {PLANS.map((plan) => (

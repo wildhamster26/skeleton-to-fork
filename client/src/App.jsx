@@ -7,6 +7,7 @@ import Register from './pages/Auth/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Admin from './pages/Admin/Admin';
 import Payments from './pages/Payments/Payments';
+import NotFound from './pages/NotFound/NotFound';
 
 export default function App() {
   return (
@@ -35,6 +36,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

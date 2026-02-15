@@ -1,4 +1,5 @@
 const BASE_URL = 'https://api.lemonsqueezy.com/v1';
+const TIMEOUT_MS = 10_000;
 
 function headers() {
   return {
@@ -8,8 +9,15 @@ function headers() {
   };
 }
 
+function fetchWithTimeout(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+}
+
 export async function createCheckout({ storeId, variantId, userEmail, userId }) {
-  const res = await fetch(`${BASE_URL}/checkouts`, {
+  const res = await fetchWithTimeout(`${BASE_URL}/checkouts`, {
     method: 'POST',
     headers: headers(),
     body: JSON.stringify({
@@ -30,8 +38,12 @@ export async function createCheckout({ storeId, variantId, userEmail, userId }) 
   });
 
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.errors?.[0]?.detail || 'Failed to create checkout');
+    let detail = 'Failed to create checkout';
+    try {
+      const error = await res.json();
+      detail = error.errors?.[0]?.detail || detail;
+    } catch { /* non-JSON error response */ }
+    throw new Error(detail);
   }
 
   const { data } = await res.json();
@@ -39,7 +51,8 @@ export async function createCheckout({ storeId, variantId, userEmail, userId }) 
 }
 
 export async function getSubscription(subscriptionId) {
-  const res = await fetch(`${BASE_URL}/subscriptions/${subscriptionId}`, {
+  const id = encodeURIComponent(subscriptionId);
+  const res = await fetchWithTimeout(`${BASE_URL}/subscriptions/${id}`, {
     headers: headers(),
   });
 
@@ -50,7 +63,8 @@ export async function getSubscription(subscriptionId) {
 }
 
 export async function cancelSubscription(subscriptionId) {
-  const res = await fetch(`${BASE_URL}/subscriptions/${subscriptionId}`, {
+  const id = encodeURIComponent(subscriptionId);
+  const res = await fetchWithTimeout(`${BASE_URL}/subscriptions/${id}`, {
     method: 'DELETE',
     headers: headers(),
   });

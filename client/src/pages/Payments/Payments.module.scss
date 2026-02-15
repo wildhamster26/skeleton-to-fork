@@ -85,6 +85,12 @@
   }
 }
 
+.error {
+  color: $color-danger;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-4;
+}
+
 .manage {
   margin-top: $spacing-8;
 

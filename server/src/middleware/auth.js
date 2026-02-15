@@ -1,12 +1,16 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
+const JWT_ALGORITHM = 'HS256';
+
 export async function getUser(token) {
   if (!token) return null;
 
   try {
     const clean = token.startsWith('Bearer ') ? token.slice(7) : token;
-    const { userId } = jwt.verify(clean, process.env.JWT_SECRET);
+    const { userId } = jwt.verify(clean, process.env.JWT_SECRET, {
+      algorithms: [JWT_ALGORITHM],
+    });
     return User.findById(userId).lean();
   } catch {
     return null;
@@ -15,6 +19,7 @@ export async function getUser(token) {
 
 export function signToken(userId) {
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    algorithm: JWT_ALGORITHM,
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 }

@@ -1,0 +1,22 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-4;
+  padding: $spacing-16 $spacing-4;
+  text-align: center;
+
+  h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    color: $color-primary;
+    line-height: 1;
+  }
+
+  p {
+    color: $color-text-light;
+    font-size: $font-size-lg;
+  }
+}
