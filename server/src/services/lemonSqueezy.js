@@ -46,8 +46,10 @@ export async function createCheckout({ storeId, variantId, userEmail, userId }) 
     throw new Error(detail);
   }
 
-  const { data } = await res.json();
-  return data.attributes.url;
+  const body = await res.json();
+  const url = body?.data?.attributes?.url;
+  if (!url) throw new Error('Invalid checkout response from payment provider');
+  return url;
 }
 
 export async function getSubscription(subscriptionId) {

@@ -25,12 +25,7 @@ export function useAuthForm(mutation, mutationName) {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      // Only send fields that have values (login doesn't need name)
-      const variables = {};
-      for (const [key, val] of Object.entries(form)) {
-        if (val) variables[key] = val;
-      }
-      execute({ variables });
+      execute({ variables: form });
     },
     [form, execute]
   );

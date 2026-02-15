@@ -11,7 +11,7 @@ export default function Login() {
     <div className={styles.page}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1>Welcome Back</h1>
-        {error && <p className={styles.error}>{error.message}</p>}
+        {error && <p className={styles.error} role="alert">{error.message}</p>}
 
         <div className={styles.field}>
           <label htmlFor="email">Email</label>
@@ -35,7 +35,7 @@ export default function Login() {
           />
         </div>
 
-        <Button className={styles.submit} disabled={loading}>
+        <Button type="submit" className={styles.submit} disabled={loading}>
           {loading ? 'Logging in...' : 'Log In'}
         </Button>
 

@@ -11,7 +11,7 @@ export default function Register() {
     <div className={styles.page}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1>Create Account</h1>
-        {error && <p className={styles.error}>{error.message}</p>}
+        {error && <p className={styles.error} role="alert">{error.message}</p>}
 
         <div className={styles.field}>
           <label htmlFor="name">Name</label>
@@ -47,7 +47,7 @@ export default function Register() {
           />
         </div>
 
-        <Button className={styles.submit} disabled={loading}>
+        <Button type="submit" className={styles.submit} disabled={loading}>
           {loading ? 'Creating account...' : 'Create Account'}
         </Button>
 

@@ -11,7 +11,7 @@ import resolvers from './graphql/resolvers.js';
 import webhookRouter from './routes/webhooks.js';
 
 // Validate required environment variables at startup
-const REQUIRED_ENV = ['MONGODB_URI', 'JWT_SECRET', 'LEMONSQUEEZY_API_KEY', 'LEMONSQUEEZY_WEBHOOK_SECRET'];
+const REQUIRED_ENV = ['MONGODB_URI', 'JWT_SECRET', 'LEMONSQUEEZY_API_KEY', 'LEMONSQUEEZY_STORE_ID', 'LEMONSQUEEZY_WEBHOOK_SECRET'];
 for (const key of REQUIRED_ENV) {
   if (!process.env[key]) {
     console.error(`Missing required environment variable: ${key}`);

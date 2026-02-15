@@ -44,7 +44,7 @@ export default function Admin() {
                   <td>{u.name}</td>
                   <td>{u.email}</td>
                   <td>{u.role}</td>
-                  <td>{new Date(Number(u.createdAt)).toLocaleDateString()}</td>
+                  <td>{new Date(u.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

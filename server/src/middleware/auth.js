@@ -11,7 +11,7 @@ export async function getUser(token) {
     const { userId } = jwt.verify(clean, process.env.JWT_SECRET, {
       algorithms: [JWT_ALGORITHM],
     });
-    return User.findById(userId).lean();
+    return await User.findById(userId).lean();
   } catch {
     return null;
   }

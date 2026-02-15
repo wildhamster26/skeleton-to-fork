@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
 import styles from './Header.module.scss';
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
@@ -26,9 +27,9 @@ export default function Header() {
           ) : (
             <>
               <Link to="/login">Login</Link>
-              <Link to="/register">
-                <Button size="sm">Get Started</Button>
-              </Link>
+              <Button size="sm" onClick={() => navigate('/register')}>
+                Get Started
+              </Button>
             </>
           )}
         </nav>
