@@ -1,17 +1,28 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { LOGIN } from '../../graphql/mutations';
 import { useAuthForm } from './useAuthForm';
 import Button from '../../components/common/Button';
+import OAuthButtons from '../../components/common/OAuthButtons';
 import styles from './Auth.module.scss';
+
+const OAUTH_ERRORS = {
+  oauth_failed: 'Social login failed. Please try again or use email.',
+};
 
 export default function Login() {
   const { form, setField, handleSubmit, loading, error } = useAuthForm(LOGIN, 'login');
+  const [params] = useSearchParams();
+  const oauthError = params.get('error');
 
   return (
     <div className={styles.page}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1>Welcome Back</h1>
-        {error && <p className={styles.error} role="alert">{error.message}</p>}
+        {(error || oauthError) && (
+          <p className={styles.error} role="alert">
+            {error?.message || OAUTH_ERRORS[oauthError] || 'Login failed'}
+          </p>
+        )}
 
         <div className={styles.field}>
           <label htmlFor="email">Email</label>
@@ -38,6 +49,8 @@ export default function Login() {
         <Button type="submit" className={styles.submit} disabled={loading}>
           {loading ? 'Logging in...' : 'Log In'}
         </Button>
+
+        <OAuthButtons />
 
         <p className={styles.link}>
           Don&apos;t have an account? <Link to="/register">Sign up</Link>

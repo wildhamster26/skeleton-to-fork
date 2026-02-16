@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       minlength: 8,
       select: false,
     },
@@ -27,6 +26,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
+    },
+    provider: {
+      type: String,
+      enum: ['local', 'google', 'facebook', 'apple'],
+      default: 'local',
+    },
+    providerId: {
+      type: String,
     },
     subscription: {
       lemonSqueezyId: String,
@@ -42,8 +49,16 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Password is required only for local accounts
+userSchema.pre('validate', function (next) {
+  if (this.provider === 'local' && !this.password) {
+    this.invalidate('password', 'Password is required for local accounts');
+  }
+  next();
+});
+
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
   try {
     this.password = await bcrypt.hash(this.password, 12);
     next();
@@ -54,6 +69,24 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
+};
+
+userSchema.statics.findOrCreateOAuth = async function ({ provider, providerId, email, name }) {
+  // Try finding by provider + providerId first
+  let user = await this.findOne({ provider, providerId });
+  if (user) return user;
+
+  // Try finding by email — link accounts if email matches
+  user = await this.findOne({ email });
+  if (user) {
+    user.provider = provider;
+    user.providerId = providerId;
+    await user.save();
+    return user;
+  }
+
+  // Create new user
+  return this.create({ provider, providerId, email, name });
 };
 
 // Strip password from JSON output

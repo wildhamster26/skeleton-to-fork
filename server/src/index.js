@@ -5,10 +5,12 @@ import helmet from 'helmet';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { connectDB } from './config/db.js';
+import './config/passport.js';
 import { getUser } from './middleware/auth.js';
 import typeDefs from './graphql/typeDefs.js';
 import resolvers from './graphql/resolvers.js';
 import webhookRouter from './routes/webhooks.js';
+import authRouter from './routes/auth.js';
 
 // Validate required environment variables at startup
 const REQUIRED_ENV = ['MONGODB_URI', 'JWT_SECRET', 'LEMONSQUEEZY_API_KEY', 'LEMONSQUEEZY_STORE_ID', 'LEMONSQUEEZY_WEBHOOK_SECRET'];
@@ -33,6 +35,9 @@ async function start() {
   app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(express.json({ limit: '16kb' }));
+
+  // OAuth routes
+  app.use('/auth', authRouter);
 
   const apollo = new ApolloServer({ typeDefs, resolvers });
   await apollo.start();

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { REGISTER } from '../../graphql/mutations';
 import { useAuthForm } from './useAuthForm';
 import Button from '../../components/common/Button';
+import OAuthButtons from '../../components/common/OAuthButtons';
 import styles from './Auth.module.scss';
 
 export default function Register() {
@@ -50,6 +51,8 @@ export default function Register() {
         <Button type="submit" className={styles.submit} disabled={loading}>
           {loading ? 'Creating account...' : 'Create Account'}
         </Button>
+
+        <OAuthButtons />
 
         <p className={styles.link}>
           Already have an account? <Link to="/login">Log in</Link>
