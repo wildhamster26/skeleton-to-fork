@@ -7,9 +7,13 @@
   padding-bottom: $spacing-8;
 
   h1 {
-    font-size: $font-size-3xl;
+    font-size: $font-size-2xl;
     font-weight: 700;
     margin-bottom: $spacing-1;
+
+    @include bp($bp-md) {
+      font-size: $font-size-3xl;
+    }
   }
 }
 
@@ -20,6 +24,7 @@
 
 .grid {
   display: grid;
+  grid-template-columns: 1fr;
   gap: $spacing-6;
 
   @include bp($bp-md) {

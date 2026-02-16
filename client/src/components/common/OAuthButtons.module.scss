@@ -38,7 +38,8 @@
   justify-content: center;
   gap: $spacing-2;
   width: 100%;
-  padding: $spacing-2 $spacing-4;
+  padding: $spacing-3 $spacing-4;
+  min-height: 44px;
   border: 1px solid $color-border;
   border-radius: $border-radius-sm;
   font-size: $font-size-sm;

@@ -9,10 +9,14 @@
   text-align: center;
 
   h1 {
-    font-size: 6rem;
+    font-size: 3rem;
     font-weight: 800;
     color: $color-primary;
     line-height: 1;
+
+    @include bp($bp-md) {
+      font-size: 6rem;
+    }
   }
 
   p {

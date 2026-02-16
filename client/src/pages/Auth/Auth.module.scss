@@ -3,20 +3,28 @@
 
 .page {
   @include flex-center;
-  padding: $spacing-16 $spacing-4;
+  padding: $spacing-8 $spacing-4;
+
+  @include bp($bp-md) {
+    padding: $spacing-16 $spacing-4;
+  }
 }
 
 .form {
   @include card;
   width: 100%;
   max-width: 420px;
-  padding: $spacing-8;
+  padding: $spacing-6;
 
   h1 {
     font-size: $font-size-2xl;
     font-weight: 700;
     margin-bottom: $spacing-6;
     text-align: center;
+  }
+
+  @include bp($bp-md) {
+    padding: $spacing-8;
   }
 }
 
@@ -33,7 +41,8 @@
 
   input {
     width: 100%;
-    padding: $spacing-2 $spacing-3;
+    padding: $spacing-3 $spacing-3;
+    min-height: 44px;
     border: 1px solid $color-border;
     border-radius: $border-radius-sm;
     font-size: $font-size-base;
