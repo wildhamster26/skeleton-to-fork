@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       lemonSqueezyId: String,
       status: {
         type: String,
-        enum: ['active', 'cancelled', 'expired', 'none'],
+        enum: ['active', 'on_trial', 'past_due', 'paused', 'cancelled', 'expired', 'none'],
         default: 'none',
       },
       plan: String,
@@ -76,13 +76,12 @@ userSchema.statics.findOrCreateOAuth = async function ({ provider, providerId, e
   let user = await this.findOne({ provider, providerId });
   if (user) return user;
 
-  // Try finding by email — link accounts if email matches
+  // Reject if email is already registered under a different provider
   user = await this.findOne({ email });
   if (user) {
-    user.provider = provider;
-    user.providerId = providerId;
-    await user.save();
-    return user;
+    throw new Error(
+      `An account with this email already exists. Please log in with ${user.provider}.`
+    );
   }
 
   // Create new user

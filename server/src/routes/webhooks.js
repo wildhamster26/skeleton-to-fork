@@ -43,7 +43,9 @@ router.post('/lemonsqueezy', express.raw({ type: 'application/json', limit: '1mb
       case 'subscription_updated':
         if (!attrs) return res.json({ received: true });
         update['subscription.lemonSqueezyId'] = String(event.data.id);
-        update['subscription.status'] = attrs.status === 'active' ? 'active' : 'cancelled';
+        update['subscription.status'] = ['active', 'on_trial', 'past_due', 'paused'].includes(attrs.status)
+          ? attrs.status
+          : 'cancelled';
         update['subscription.plan'] = attrs.variant_name;
         update['subscription.currentPeriodEnd'] = attrs.renews_at;
         break;

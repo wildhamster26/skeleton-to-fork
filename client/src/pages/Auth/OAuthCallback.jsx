@@ -15,7 +15,7 @@ export default function OAuthCallback() {
       login(token);
       navigate('/dashboard', { replace: true });
     } else {
-      navigate(`/login${error ? `?error=${error}` : ''}`, { replace: true });
+      navigate(`/login${error ? `?error=${encodeURIComponent(error)}` : ''}`, { replace: true });
     }
   }, [params, login, navigate]);
 

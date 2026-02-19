@@ -65,7 +65,7 @@ export default {
     },
 
     async login(_parent, { email, password }) {
-      const user = await User.findOne({ email }).select('+password');
+      const user = await User.findOne({ email, provider: 'local' }).select('+password');
 
       // Always run bcrypt to prevent timing-based user enumeration
       const isValid = user
@@ -99,13 +99,11 @@ export default {
         throw new Error('No active subscription');
       }
 
-      const cancelled = await lsCancelSub(dbUser.subscription.lemonSqueezyId);
-      if (cancelled) {
-        dbUser.subscription.status = 'cancelled';
-        await dbUser.save();
-      }
+      await lsCancelSub(dbUser.subscription.lemonSqueezyId);
+      dbUser.subscription.status = 'cancelled';
+      await dbUser.save();
 
-      return cancelled;
+      return true;
     },
   },
 };

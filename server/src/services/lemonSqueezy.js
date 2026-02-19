@@ -71,5 +71,14 @@ export async function cancelSubscription(subscriptionId) {
     headers: headers(),
   });
 
-  return res.ok;
+  if (!res.ok) {
+    let detail = 'Failed to cancel subscription';
+    try {
+      const error = await res.json();
+      detail = error.errors?.[0]?.detail || detail;
+    } catch { /* non-JSON error response */ }
+    throw new Error(detail);
+  }
+
+  return true;
 }

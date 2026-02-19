@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
 import styles from './Landing.module.scss';
 
 export default function Landing() {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.landing}>
       <section className={styles.hero}>
@@ -14,14 +16,12 @@ export default function Landing() {
           dashboard — so you can focus on what makes your app unique.
         </p>
         <div className={styles.cta}>
-          <Link to="/register">
-            <Button size="lg">Get Started Free</Button>
-          </Link>
-          <Link to="/payments">
-            <Button variant="secondary" size="lg">
-              View Pricing
-            </Button>
-          </Link>
+          <Button size="lg" onClick={() => navigate('/register')}>
+            Get Started Free
+          </Button>
+          <Button variant="secondary" size="lg" onClick={() => navigate('/payments')}>
+            View Pricing
+          </Button>
         </div>
       </section>
 

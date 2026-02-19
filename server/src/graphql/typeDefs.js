@@ -6,11 +6,11 @@ export default gql`
     email: String!
     name: String!
     role: String!
-    subscription: Subscription
+    subscription: UserSubscription
     createdAt: String!
   }
 
-  type Subscription {
+  type UserSubscription {
     lemonSqueezyId: String
     status: String!
     plan: String
