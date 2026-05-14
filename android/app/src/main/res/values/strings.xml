@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pinyin Widget</string>
+    <string name="widget_description">Displays pinyin vocabulary with translations</string>
+    <string name="config_title">Configure Pinyin Widget</string>
+    <string name="config_instructions">Choose a JSON file containing your vocabulary words.\n\nThe file must follow the format shown in sample_words.json.</string>
+    <string name="choose_file">Choose JSON File</string>
+</resources>
